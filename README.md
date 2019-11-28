@@ -1,2 +1,2 @@
 # biomisc
-Miscellaneous utilities for bioinformatics and NGS data analysis.
+Miscellaneous utilities for Bioinformatics and NGS data analysis.
