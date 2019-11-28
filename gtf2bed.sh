@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 INFILE=$1
 OUTFILE="${INFILE%.gtf}.bed"
 

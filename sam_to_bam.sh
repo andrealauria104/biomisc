@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Convert SAM to sorted and indexed BAM.
 #
