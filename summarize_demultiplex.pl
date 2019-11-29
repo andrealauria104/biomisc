@@ -26,7 +26,7 @@ while ( my $file = glob($file_patterns) ) {
 		chomp($row);
 		if($row =~ m/(<td>\d+,(.*?)<\/td>?|<td>\d+<\/td>?)/g) {
 			$row =~ s/(<td>|<\/td>)//g;
-			$row =~ s/(,)/./g;
+			$row =~ s/(,)//g;
 			push(@summary, $row);
 		}
 	}
