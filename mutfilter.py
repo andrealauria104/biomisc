@@ -125,7 +125,7 @@ def create_parser():
 		, dest='mutation'
 		, action='store'
 		, default='T=>C'
-		, help='Mutation to filter BAM with. Default: None')
+		, help='Mutation to filter BAM with. Default: T=>C')
 
 	parser.add_argument('-s','--stdout'
 		, dest='stdout'
