@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 '''
 ##
 # BAM mutation filter tool.
@@ -131,7 +131,7 @@ def create_parser():
 		, dest='stdout'
 		, action='store_true'
 		, default=None
-		, help='If set, report mutations to stdout instead of writing to bam..')
+		, help='If set, report mutations to stdout instead of writing to BAM.')
 
 	parser.add_argument('-e','--exact'
 		, dest='report_exact_matches'
@@ -165,7 +165,6 @@ def main(bampath, mutation, stdout, report_exact_matches):
 
 if __name__ == '__main__':
 
-
 	parser = create_parser()
 
 	if len(sys.argv) == 1:
@@ -176,7 +175,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	# Execution
-	filtmismatch = main(bampath = args.bampath
+	main(bampath 				= args.bampath
 		, mutation              = args.mutation
 		, stdout 				= args.stdout
 		, report_exact_matches  = args.report_exact_matches)
