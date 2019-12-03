@@ -37,8 +37,11 @@ sub countreads
 
 	open(my $fh, '<:encoding(UTF-8)', $fastq) or die "\n[!] Error: Could not open file '$fastq' ($!)\n\n";
 	my $id = <$fh>;
-	die "\n[!] Error: invalid FASTQ file\n\n" if ($id !~ m/^\@/);
-	$line += 1;
+	my $seq = <$fh>;
+	my $plus = <$fh>;
+	my $qual = <$fh>;
+	die "\n[!] Error: invalid FASTQ file\n\n" if ($id !~ m/^\@/ || $plus !~ m/^\+/);
+	$line += 4;
 	while(<$fh>) {
 		$line++;
 	}
