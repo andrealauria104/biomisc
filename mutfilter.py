@@ -175,7 +175,7 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	# Execution
-	main(bampath 				= args.bampath
-		, mutation              = args.mutation
-		, stdout 				= args.stdout
-		, report_exact_matches  = args.report_exact_matches)
+	main(bampath = args.bampath
+		, mutation = args.mutation
+		, stdout = args.stdout
+		, report_exact_matches = args.report_exact_matches)
