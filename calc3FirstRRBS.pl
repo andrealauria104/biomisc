@@ -20,7 +20,7 @@ if( -f $mypath ) {
 	opendir(DH, $mypath);
 	my @files = readdir(DH);
 	closedir(DH);
-	
+
 	print "sample\ttotreads\trrbsreads\tratio\n";
 	foreach my $file (@files) {
 		next if($file !~ /\.(fastq|fq)(\.gz|)$/);
@@ -63,7 +63,8 @@ sub calc3First
 	}
 
 	my $ratio = $rrbscount/$readcount;
-	return ($readcount, $rrbscount, $ratio);
+	my @calcres = ($readcount, $rrbscount, $ratio);
+	return(@calcres);
 }
 
 
