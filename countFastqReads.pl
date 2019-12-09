@@ -21,7 +21,7 @@ if( -f $mypath ) {
 	closedir(DH);
 	
 	foreach my $file (@files) {
-		next if($file !~ /(\.fastq|\.fq)$/);
+		next if($file !~ /\.(fastq|fq)(\.gz|)$/);
 		$dirfile = join("/", $mypath, $file);
 		$count = countreads($dirfile);
 		print $file ."\t". $count . "\n";
