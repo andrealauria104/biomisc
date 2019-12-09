@@ -35,17 +35,31 @@ sub countreads
 	my $line = 0;
 	my $readcount = 0;
 
-	open(my $fh, '<:encoding(UTF-8)', $fastq) or die "\n[!] Error: Could not open file '$fastq' ($!)\n\n";
-	my $id = <$fh>;
-	my $seq = <$fh>;
-	my $plus = <$fh>;
-	my $qual = <$fh>;
-	die "\n[!] Error: invalid FASTQ file\n\n" if ($id !~ m/^\@/ || $plus !~ m/^\+/);
-	$line += 4;
-	while(<$fh>) {
-		$line++;
-	}
-	close($fh);
+	if ($fastq =~ /.gz$/) {
+		open(my $fh, "gzip -cd $fastq|") or die "\n[!] Error: Could not open file '$fastq' ($!)\n\n";
+		my $id = <$fh>;
+		my $seq = <$fh>;
+		my $plus = <$fh>;
+		my $qual = <$fh>;
+		die "\n[!] Error: invalid FASTQ file\n\n" if ($id !~ m/^\@/ || $plus !~ m/^\+/);
+		$line += 4;
+		while(<$fh>) {
+			$line++;
+		}
+		close($fh);
+	} else {
+		open(my $fh, '<:encoding(UTF-8)', $fastq) or die "\n[!] Error: Could not open file '$fastq' ($!)\n\n";
+		my $id = <$fh>;
+		my $seq = <$fh>;
+		my $plus = <$fh>;
+		my $qual = <$fh>;
+		die "\n[!] Error: invalid FASTQ file\n\n" if ($id !~ m/^\@/ || $plus !~ m/^\+/);
+		$line += 4;
+		while(<$fh>) {
+			$line++;
+		}
+		close($fh);
+	} 
 
 	$readcount = $line/4;
 }

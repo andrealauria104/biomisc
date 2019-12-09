@@ -37,7 +37,7 @@ sub readNcalc3First
 	my $fastq = $_[0];
 
 	if ($fastq =~ /.gz$/) {
-		open(my $fh, '<:gzip', $fastq) or die "\n[!] Error: Could not open file '$fastq' ($!)\n\n";
+		open(my $fh, "gzip -cd $fastq|") or die "\n[!] Error: Could not open file '$fastq' ($!)\n\n";
 		calc3First($fh);
 	} else {
 		open(my $fh, '<:encoding(UTF-8)', $fastq) or die "\n[!] Error: Could not open file '$fastq' ($!)\n\n";
@@ -63,8 +63,8 @@ sub calc3First
 	}
 
 	my $ratio = $rrbscount/$readcount;
-	my @calcres = ($readcount, $rrbscount, $ratio);
-	return(@calcres);
+	
+	return($readcount, $rrbscount, $ratio);
 }
 
 
