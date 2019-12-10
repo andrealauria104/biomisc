@@ -62,6 +62,6 @@ elif [ -d "${INPUT}" ]; then
 		fsam2bam $SAM
 	done
 	echo " -- moving files"
-	mv -t $BAMDIR $SAMDIR/*.bam*
+	mv $SAMDIR/*.bam* $BAMDIR
 	echo "[*] done."
 fi
