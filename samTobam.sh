@@ -47,7 +47,7 @@ INPUT=$1
 echo "============================================="
 echo "=== Convert SAM to sorted and indexed BAM ==="
 echo "============================================="
-echo "\n"
+echo ""
 
 if [ -f "${INPUT}" ]; then
 	fsam2bam $INPUT
