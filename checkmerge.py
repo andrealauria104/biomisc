@@ -53,17 +53,21 @@ print("\n -- Check merging ...")
 print("\n")
 check = {}
 for k in m.keys():
-	if k in r1 and k in r2:
-		res = r1[k]+r2[k]
-		check[k] = m[k] == r1[k]+r2[k]
-		if check[k] is True:
-			toprint = str(r1[k]) + " + " + str(r2[k]) + " = " + str(res) + " == "+ str(m[k])
-			print(toprint)
+	if k not in r1.keys():
+		r1[k] = 0
+	if k not in r2.keys():
+		r2[k] = 0
+
+	res = r1[k]+r2[k]
+	check[k] = m[k] == r1[k]+r2[k]
+	if check[k] is True:
+		toprint = str(r1[k]) + " + " + str(r2[k]) + " = " + str(res) + " == "+ str(m[k])
+		print(toprint)
 
 checkres = all(check[k] == True for k in check.keys())
 
 if checkres == True:
-	print("\nn = " + str(len(m)))
+	print("\nn = " + str(len(check)))
 	print("\n [+] Merging is correct!\n")
 else:
 	print("\n [!] Something is wrong, uncorrect merging. \n")
