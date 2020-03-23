@@ -8,6 +8,7 @@ This repository contains a set of utilities to solve common small tasks encounte
 - checkmerge.py: Merge sequencing of the same libraries coming from different Illumina runs.<br/>
 - countFastqReads.pl: Count reads in FASTQ file.<br/>
 - extract_gencode_tss.sh: Extract TSS frome GENCODE annotation GTF file. <br/>
+- features-from-gtf.pl: Retrieves genomic coordinates for TSS, exons and introns from GTF annotation file. <br/>
 - gtf2bed.sh: Convert file from GTF to BED format.<br/>
 - mutfilter.py: Filter BAM by specific mutation.<br/>
 - samToBam.sh: Convert file from SAM to BAM format.<br/>
