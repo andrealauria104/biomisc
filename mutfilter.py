@@ -63,7 +63,7 @@ def get_mismatch(tagsv):
 	return (mismatch, tagsv)
 
 
-def filter_mismatch(mismatch, mutation, report_exact_matches, directional):
+def filter_mismatch(mismatch, mutation, report_exact_matches, n_other_mismatch, directional):
 	'''
 	# Filter mismatch for specific mutations
 	'''
@@ -72,24 +72,30 @@ def filter_mismatch(mismatch, mutation, report_exact_matches, directional):
 	if report_exact_matches == True:
 		if directional == True:
 			if mismatch[1]['reverse'] == True:
-				filtmismatch = all(x == reverse_mutation for x in mismatch[0]) or len(mismatch[0])==0
+				to_check = [x == reverse_mutation for x in mismatch[0]]
+				filtmismatch = (any(to_check) and sum(to_check)>=(len(mismatch[0])-n_other_mismatch)) or len(mismatch[0])==0
 			else:
-				filtmismatch = all(x == mutation for x in mismatch[0]) or len(mismatch[0])==0
+				to_check = [x == mutation for x in mismatch[0]]
+				filtmismatch = (any(to_check) and sum(to_check)>=(len(mismatch[0])-n_other_mismatch)) or len(mismatch[0])==0
 		else:
-			filtmismatch = all(x == mutation for x in mismatch[0]) or len(mismatch[0])==0
+			to_check = [x == mutation for x in mismatch[0]]
+			filtmismatch = (any(to_check) and sum(to_check)>=(len(mismatch[0])-n_other_mismatch)) or len(mismatch[0])==0
 	else:
 		if directional == True:
 			if mismatch[1]['reverse'] == True:
-				filtmismatch = all(x == reverse_mutation for x in mismatch[0]) and len(mismatch[0])!=0
+				to_check = [x == reverse_mutation for x in mismatch[0]]
+				filtmismatch = (any(to_check) and sum(to_check)>=(len(mismatch[0])-n_other_mismatch)) and len(mismatch[0])!=0
 			else:
-				filtmismatch = all(x == mutation for x in mismatch[0]) and len(mismatch[0])!=0
+				to_check = [x == mutation for x in mismatch[0]]
+				filtmismatch = (any(to_check) and sum(to_check)>=(len(mismatch[0])-n_other_mismatch)) and len(mismatch[0])!=0
 		else:
-			filtmismatch = all(x == mutation for x in mismatch[0]) and len(mismatch[0])!=0
+			to_check = [x == mutation for x in mismatch[0]]
+			filtmismatch = (any(to_check) and sum(to_check)>=(len(mismatch[0])-n_other_mismatch)) and len(mismatch[0])!=0
 
 	return filtmismatch
 
 
-def filter_bam(bampath, mutation, report_exact_matches, directional):
+def filter_bam(bampath, mutation, report_exact_matches, n_other_mismatch, directional):
 	'''
 	# Filter and write to BAM file
 	# Sort and index BAM
@@ -111,7 +117,7 @@ def filter_bam(bampath, mutation, report_exact_matches, directional):
 		
 		mismatch = get_mismatch(tagsv)
 		
-		if filter_mismatch(mismatch, mutation, report_exact_matches, directional):
+		if filter_mismatch(mismatch, mutation, report_exact_matches, n_other_mismatch, directional):
 			filtbamfile.write(read)
 
 	filtbamfile.close()
@@ -153,6 +159,13 @@ def create_parser():
 		, action='store_true'
 		, default=None
 		, help='Include reads with no mutations.')
+	
+	parser.add_argument('-n','--n-other-mismatch'
+                , dest='n_other_mismatch'
+                , action='store'
+                , default=0
+                , help='Maximum number of other mismatches per read to include (Default: 0).'
+		, type=int)
 
 	parser.add_argument('-d','--directional'
 		, dest='directional'
@@ -163,7 +176,7 @@ def create_parser():
 	return parser
 
 
-def main(bampath, mutation, stdout, report_exact_matches, directional):
+def main(bampath, mutation, stdout, report_exact_matches, n_other_mismatch, directional):
 	'''
 	Main program function
 	'''
@@ -176,13 +189,13 @@ def main(bampath, mutation, stdout, report_exact_matches, directional):
 		print(report_exact_matches)
 		print(mutation)
 		for k,v in mismatch.items():
-			if filter_mismatch(v, mutation, report_exact_matches, directional):
+			if filter_mismatch(v, mutation, report_exact_matches, n_other_mismatch, directional):
 				print(k, " :: ", v)
 			else:
 				continue
 	else:
 		# Write filtered BAM
-		filter_bam(bampath, mutation, report_exact_matches, directional)
+		filter_bam(bampath, mutation, report_exact_matches, n_other_mismatch, directional)
 
 	sys.exit("\n[*] done.\n")
 
@@ -203,4 +216,5 @@ if __name__ == '__main__':
 		, mutation = args.mutation
 		, stdout = args.stdout
 		, report_exact_matches = args.report_exact_matches
+		, n_other_mismatch = args.n_other_mismatch
 		, directional = args.directional)

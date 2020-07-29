@@ -44,6 +44,8 @@ fsam2bam () {
 
 # execution ---
 INPUT=$1
+BAMDIR=${2:-BAM}
+
 echo "============================================="
 echo "=== Convert SAM to sorted and indexed BAM ==="
 echo "============================================="
@@ -54,7 +56,6 @@ if [ -f "${INPUT}" ]; then
 	echo "[*] done."
 elif [ -d "${INPUT}" ]; then
 	SAMDIR=$INPUT
-	BAMDIR="BAM"
 	mkdir $BAMDIR
 	for SAM in $SAMDIR/*.sam
 	do
