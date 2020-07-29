@@ -62,7 +62,7 @@ use Getopt::Long;
 use Pod::Usage;
 
 my $version = '0.1';
-my $out_fhdir = ".";
+my $out_fhdir = "./";
 my ($force, $gtf, $in_fh, $out_fh, $checked_bed);
 
 parseArguments();

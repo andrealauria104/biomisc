@@ -15,7 +15,7 @@ if [[ $BED == true ]]; then
 		else if($7 == "-") tss = $5;
 		gsub("\"|;","");
 		print $1,tss-1,tss,$7,$10}
-		' < $ANNOT > $OUTFILE
+		' < $ANNOT | sort -k1,1 -k2,2n -V > $OUTFILE
 else
 	OUTFILE=${ANNOT%.gtf}.tss.txt
 	echo "  -- output file = ${OUTFILE}"
