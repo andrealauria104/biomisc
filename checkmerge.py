@@ -12,7 +12,7 @@ def read_nreads(fnreads):
 
 def create_parser():
 	parser = argparse.ArgumentParser(
-		description = "Merge libraries from Illumina runs."
+		description = "Check merged libraries from Illumina runs."
 		, epilog = "Author: Andrea Lauria")
 	
 	parser.add_argument("-r1","--run_1"
