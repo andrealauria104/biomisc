@@ -13,3 +13,4 @@ This repository contains a set of utilities to solve common small tasks encounte
 - `mutfilter.py`: Filter BAM by specific mutation.<br/>
 - `samToBam.sh`: Convert file from SAM to BAM format.<br/>
 - `summarize_demultiplex.pl`: Summarize demultiplexing of Illumina sequencing run.<br/>
+- `demultiplex-undetermined-v3.py`: Demultiplex Undetermined FastQ from Illumina sequencing run.<br/>
