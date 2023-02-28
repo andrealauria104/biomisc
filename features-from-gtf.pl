@@ -149,7 +149,7 @@ if($checked_bed) {
             my @interval_1 = @{$exons[$i]}[1,2];
             my @interval_2 = @{$exons[$i+1]}[1,2];
 
-            if (intersect(@interval_1, @interval_2)) {
+            if ( $interval_1[1] >=  $interval_2[0] ) {
                 my $start = min($interval_1[0], $interval_2[0]);
                 my $end = max($interval_1[1], $interval_2[1]);
 
@@ -223,23 +223,18 @@ if($checked_bed) {
 # Subroutines ----
 sub check_bed 
 {
-	my $bed = $_[0];
+    my $bed = $_[0];
     my $forced = $_[1];
-	if (-f $bed && $forced) {
+    if (-f $bed && $forced) {
         print "\n  [!] Overwriting existing file\n";
         system("rm $bed");
         return 1;
-	} elsif (!-f $bed) {
+    } elsif (!-f $bed) {
         return 1;
     } else {
         print "\n  [!] Output file exists. Re-run with -f|--force option for replacing it.\n";
         return 0;
     }
-}
-
-sub check_exists_command { 
-    my $check = `sh -c 'command -v $_[0]'`; 
-    return $check;
 }
 
 sub parseArguments
