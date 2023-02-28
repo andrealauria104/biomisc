@@ -69,9 +69,12 @@ parseArguments();
 
 die "\n  [!] Error: Please provide a valid path for input GTF file. \n\n" if (!defined $gtf || !-f $gtf);
 
+my $bedtools_version = `bedtools --version` or die "$0 requires bedtools";
+
 print "============================================== \n";
 print "==== Extract features from GTF annotation ==== \n";
 print "============================================== \n";
+print "\n -- using = " . $bedtools_version;
 print "\n -- annotation = " . $gtf . "\n";
 
 # 1. Extract TSS ---
@@ -232,6 +235,11 @@ sub check_bed
         print "\n  [!] Output file exists. Re-run with -f|--force option for replacing it.\n";
         return 0;
     }
+}
+
+sub check_exists_command { 
+    my $check = `sh -c 'command -v $_[0]'`; 
+    return $check;
 }
 
 sub parseArguments
