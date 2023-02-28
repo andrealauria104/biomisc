@@ -180,7 +180,7 @@ print "\n[+] Extract introns, output file (BED format) = " . $intron_bed . "\n";
 $checked_bed = check_bed($intron_bed, $force);
 
 if($checked_bed) {
-    system("mergeBed -c 4 -o distinct -i $exon_bed > tmp_exon.bed");
+    system("mergeBed -s -c 4,5,6 -o distinct -i $exon_bed > tmp_exon.bed");
     my %gene_exons_i;
     open($in_fh, "< tmp_exon.bed"); # open "exon" features
     while(<$in_fh>) {
@@ -191,8 +191,8 @@ if($checked_bed) {
         my $chr = $line[0];
         my $start = $line[1];
         my $end = $line[2];
-
-        push(@{$gene_exons_i{$gene_id}}, [$chr, $start, $end]);
+	my $strand = $line[5];
+        push(@{$gene_exons_i{$gene_id}}, [$chr, $start, $end, $strand]);
         
     }
     close($in_fh);
@@ -204,9 +204,10 @@ if($checked_bed) {
             my $intron_start = $exons_i[$i][2];
             my $intron_end = $exons_i[$i+1][1]; 
             my $intron_name = $id . "_intron_" . $i;
+	    my $intron_strand = $exons_i[$i][3];
 
             open ($out_fh, ">> $intron_bed") || die "[!] Error: Could not open file '$exon_bed' ($!)\n";
-            print $out_fh join("\t", $exons_i[$i][0], $intron_start, $intron_end, $intron_name,".","+") . "\n";
+            print $out_fh join("\t", $exons_i[$i][0], $intron_start, $intron_end, $intron_name,".",$intron_strand) . "\n";
             close($out_fh);
             }
         }
