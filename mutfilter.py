@@ -197,8 +197,6 @@ def main(bampath, mutation, stdout, report_exact_matches, n_other_mismatch, dire
 		# Write filtered BAM
 		filter_bam(bampath, mutation, report_exact_matches, n_other_mismatch, directional)
 
-	sys.exit("\n[*] done.\n")
-
 
 if __name__ == '__main__':
 
