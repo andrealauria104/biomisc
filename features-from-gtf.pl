@@ -171,8 +171,8 @@ if($checked_bed) {
         }
     }
 
-    system("sort -k1,1 -k2,2n -V $exon_bed > tmp_exon.bed");
-    system("mv tmp_exon.bed $exon_bed");
+    system("bedtools sort -i $exon_bed > $gtf.tmp_exon.bed");
+    system("mv $gtf.tmp_exon.bed $exon_bed");
 }
 
 # 3. Extract introns ----
@@ -183,9 +183,10 @@ print "\n[+] Extract introns, output file (BED format) = " . $intron_bed . "\n";
 $checked_bed = check_bed($intron_bed, $force);
 
 if($checked_bed) {
-    system("mergeBed -s -c 4,5,6 -o distinct -i $exon_bed > tmp_exon.bed");
+#    system("mergeBed -s -c 4,5,6 -o distinct -i $exon_bed > tmp_exon.bed");
     my %gene_exons_i;
-    open($in_fh, "< tmp_exon.bed"); # open "exon" features
+#    open($in_fh, "< tmp_exon.bed"); # open "exon" features
+    open($in_fh, "< $exon_bed"); # open "exon" features
     while(<$in_fh>) {
         chomp;
         my @line = split /\t/;
@@ -209,15 +210,16 @@ if($checked_bed) {
             my $intron_name = $id . "_intron_" . $i;
 	    my $intron_strand = $exons_i[$i][3];
 
-            open ($out_fh, ">> $intron_bed") || die "[!] Error: Could not open file '$exon_bed' ($!)\n";
+            open ($out_fh, ">> $intron_bed") || die "[!] Error: Could not open file '$intron_bed' ($!)\n";
             print $out_fh join("\t", $exons_i[$i][0], $intron_start, $intron_end, $intron_name,".",$intron_strand) . "\n";
             close($out_fh);
             }
         }
 
-    system("sort -k1,1 -k2,2n -V $intron_bed > tmp_intron.bed");
-    system("bedtools subtract -a tmp_intron.bed -b $exon_bed > $intron_bed");
-    system("rm tmp_exon.bed tmp_intron.bed");
+    system("bedtools sort -i $intron_bed > $gtf.tmp_intron.bed");
+    system("mv $gtf.tmp_intron.bed $intron_bed");
+#    system("bedtools subtract -a tmp_intron.bed -b $exon_bed > $intron_bed");
+#    system("rm tmp_exon.bed tmp_intron.bed");
 }
 
 # Subroutines ----
