@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-import argparse, os, re, sys
+import argparse, os, re, warnings, shlex, sys
 import pandas as pd
+
+special_char = '[@!#$%^&*()<>?|}{~:];:`"\' '
+
 # functions ---
 def create_parser():
 	parser = argparse.ArgumentParser(
@@ -43,23 +46,36 @@ def create_parser():
 
 	return parser
 
-
 def config_merge(path_config, dry_run = False, soft_link = False):
 	
 	config_df = pd.read_csv(path_config, sep='\t')
 
+	# validate config
+	validate_config = []
 	for index, row in config_df.iterrows():
-		if index == 0 or config_df.loc[index]['DEST'] != config_df.loc[index-1]['DEST']:
-			if soft_link == True and config_df['DEST'].value_counts()[row['DEST']]==1:
-				cmd = 'ln -sf ' + row['SRC'] + ' ' + row['DEST']
-			else:
-				cmd = 'cat ' + row['SRC'] + ' > ' + row['DEST']
-		else:
-			cmd = 'cat ' + row['SRC'] + ' >> ' + row['DEST']
-		print(cmd)
-		if dry_run == False:
-			os.system(cmd)
+		validate_config.append(any([i in special_char for i in row['SRC']]) or any([i in special_char for i in row['DEST']]))
 
+	if any(validate_config):
+		print('\n[!] Special characters not allowed.')
+		#print('\nAny of {} was found.'.format(shlex.quote(special_char)))
+		print('\nCheck offending rows in configuration file:')
+		print(config_df[validate_config])
+	else:
+		for index, row in config_df.iterrows():
+			if not os.path.isfile(row['SRC']):
+				print('[!] SRC file {} does not exist.'.format(row['SRC']))
+				pass
+			else:
+				if index == 0 or config_df.loc[index]['DEST'] != config_df.loc[index-1]['DEST']:
+					if soft_link == True and config_df['DEST'].value_counts()[row['DEST']]==1:
+						cmd = 'ln -sf {} {}'.format(shlex.quote(row['SRC']), shlex.quote(row['DEST']))
+					else:
+						cmd = 'cat {} > {}'.format(shlex.quote(row['SRC']), shlex.quote(row['DEST']))
+				else:
+					cmd = 'cat {} >> {}'.format(shlex.quote(row['SRC']), shlex.quote(row['DEST']))
+				print(cmd)
+				if dry_run == False:
+					os.system(cmd)
 
 def run_merge(run1_dir, run2_dir, mergedir, dry_run = False, soft_link = False):
 	
@@ -77,26 +93,27 @@ def run_merge(run1_dir, run2_dir, mergedir, dry_run = False, soft_link = False):
 		files = set(run1_files + run2_files)
 
 		for f in files:
-			merged_file = mergedir + "/" + f
-			f1 = run1_dir + "/" + f
+			merged_file = '{}/{}'.format(mergedir,f)
+			f1 = '{}/{}'.format(run1_dir,f)
 			if os.path.isfile(f1):
-				cmd1 = "cat " + f1
+				cmd1 = "cat " + shlex.quote(f1)
 			else:
 				cmd1 = ""
-			f2 = run2_dir + "/" + f
+			f2 = '{}/{}'.format(run2_dir,f)
 			if os.path.isfile(f2):
 				if cmd1 == "":
-					cmd2 = "cat " + f2
+					cmd2 = "cat " + shlex.quote(f2)
 				else:
-					cmd2 = " " + f2
+					cmd2 = " " + shlex.quote(f2)
 			else:
 				cmd2 = ""
 
 			if soft_link == True and (cmd1 == "" or cmd2 == ""):
-				cmd = cmd1 + cmd2 + " " + merged_file
+				warnings.warn("\nSoflink might break with relative paths. Use config file.\n")
+				cmd = cmd1 + cmd2 + " " + shlex.quote(merged_file)
 				cmd = re.sub("cat","ln -sf",cmd)
 			else:
-				cmd = cmd1 + cmd2 + " > " + merged_file
+				cmd = cmd1 + cmd2 + " > " + shlex.quote(merged_file)
 			print(cmd)
 			if dry_run == False:
 				os.system(cmd)
