@@ -109,7 +109,7 @@ def run_merge(run1_dir, run2_dir, mergedir, dry_run = False, soft_link = False):
 				cmd2 = ""
 
 			if soft_link == True and (cmd1 == "" or cmd2 == ""):
-				warnings.warn("\nSoflink might break with relative paths. Use config file.\n")
+				warnings.warn("\nSoft links might break with relative paths. Use config file.\n")
 				cmd = cmd1 + cmd2 + " " + shlex.quote(merged_file)
 				cmd = re.sub("cat","ln -sf",cmd)
 			else:
