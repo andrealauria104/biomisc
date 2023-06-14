@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import argparse, os, re, warnings, shlex, sys
+import argparse, os, re, warnings, shlex, subprocess, sys
 import pandas as pd
 
 special_char = '[@!#$%^&*()<>?|}{~:];:`"\' '
@@ -75,7 +75,7 @@ def config_merge(path_config, dry_run = False, soft_link = False):
 					cmd = 'cat {} >> {}'.format(shlex.quote(row['SRC']), shlex.quote(row['DEST']))
 				print(cmd)
 				if dry_run == False:
-					os.system(cmd)
+					subprocess.run(cmd, shell=True, check=True)
 
 def run_merge(run1_dir, run2_dir, mergedir, dry_run = False, soft_link = False):
 	
@@ -116,7 +116,7 @@ def run_merge(run1_dir, run2_dir, mergedir, dry_run = False, soft_link = False):
 				cmd = cmd1 + cmd2 + " > " + shlex.quote(merged_file)
 			print(cmd)
 			if dry_run == False:
-				os.system(cmd)
+				subprocess.run(cmd, shell=True, check=True)
 
 
 def main(path_config, run1_dir, run2_dir, mergedir, dry_run, soft_link):
