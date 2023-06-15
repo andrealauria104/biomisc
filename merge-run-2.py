@@ -1,48 +1,72 @@
 #!/usr/bin/env python3
-import argparse, os, re, warnings, shlex, subprocess, sys
+import argparse
+import os
+import re
+import shlex
+import subprocess
+import sys
+import warnings
 import pandas as pd
 
 special_char = '[@!#$%^&*()<>?|}{~:];:`"\' '
 
 # functions ---
 def create_parser():
+
 	parser = argparse.ArgumentParser(
-		description = "Merge libraries from Illumina sequencing runs."
-		, epilog = "Author: Andrea Lauria")
-	
-	parser.add_argument("-i","--config"
-		, dest = "config"
-		, action = "store"
-		, default = None
-		, help = "Path to src/dest configuration file (tab-delimited). N.B.: It must contain full paths.")
+		description = "Merge libraries from Illumina sequencing runs.",
+		epilog = "Author: Andrea Lauria",
+	)
 
-	parser.add_argument("-r1","--run_1"
-		, dest = "run_1"
-		, action = "store"
-		, default = None
-		, help = "Path to run 1 (Works if config is missing, merges by filenames).")
-	
-	parser.add_argument("-r2","--run_2"
-		, dest = "run_2"
-		, action = "store"
-		, default = None
-		, help = "Path to run 2 (Works if config is missing, merges by filenames).")
-	
-	parser.add_argument("-m","--merged"
-		, dest = "merged"
-		, action = "store"
-		, default = None
-		, help = "Path to merged run (Works if config is missing, merge by filenames).")
+	parser.add_argument(
+		"-i",
+		"--config",
+		dest = "config",
+		action = "store",
+		default = None,
+		help = "Path to src/dest configuration file (tab-delimited). N.B.: It must contain full paths.",
+	)
 
-	parser.add_argument('--dry'
-		, dest='dry_run'
-		, action='store_true'
-		, help='Enable dry run.')
+	parser.add_argument(
+		"-r1",
+		"--run_1",
+		dest = "run_1",
+		action = "store",
+		default = None,
+		help = "Path to run 1 (Works if config is missing, merges by filenames).",
+	)
+	
+	parser.add_argument(
+		"-r2",
+		"--run_2",
+		dest = "run_2",
+		action = "store",
+		default = None,
+		help = "Path to run 2 (Works if config is missing, merges by filenames).",
+	)
+	
+	parser.add_argument(
+		"-m",
+		"--merged",
+		dest = "merged",
+		action = "store",
+		default = None,
+		help = "Path to merged run (Works if config is missing, merge by filenames).",
+	)
 
-	parser.add_argument('--soft-link'
-		, dest='soft_link'
-		, action='store_true'
-		, help='Create soft links for samples present only once (Works if config is provided).')
+	parser.add_argument(
+		"--dry",
+		dest="dry_run",
+		action="store_true",
+		help="Enable dry run.",
+	)
+
+	parser.add_argument(
+		"--soft-link",
+		dest="soft_link",
+		action="store_true",
+		help="Create soft links for samples present only once (Works if config is provided).",
+	)
 
 	return parser
 
@@ -136,9 +160,11 @@ if __name__ == '__main__':
 
 	args = parser.parse_args()
 
-	main(path_config = args.config, 
+	main(
+		path_config = args.config,
 		run1_dir = args.run_1,
 		run2_dir = args.run_2,
 		mergedir = args.merged,
 		dry_run = args.dry_run,
-		soft_link = args.soft_link)
+		soft_link = args.soft_link,
+	)
